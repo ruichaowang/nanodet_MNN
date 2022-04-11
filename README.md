@@ -14,11 +14,6 @@
 - 修改 CMakeLists.txt 中  OpenCV 的地址, 由于我是用 brew 安装的,  "/opt/homebrew/Cellar/opencv/4.5.5/include/opencv4"
 - 修改 #define __SAVE_RESULT__, 为此我就直接注释掉了. 因为并不需要额外存储,以及他其实会报错...
 
-
-
-
-
-
 -------------------------------------------------
 # 原始版本说明
 This fold provides NanoDet inference code using
