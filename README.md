@@ -1,6 +1,7 @@
 # NanoDet MNN Demo
 
  对于 0 基础的人, 这里会添加一些使用说明. 
+ 当前软件可以运行在 mac 或者是 android 上.
  
 ## 准备 MNN & 模型 & 修改原始代码的地址
 - MNN 要从官方进行编译, for example , 咱们现在这个 demo 是运行在 mac 上的要用 c++ ,那就要用 https://www.yuque.com/mnn/en/build_linux  , Linux / macOS / Ubuntu 这一段来进行编译.
@@ -13,6 +14,49 @@
 - MNN include, 在编译的时候是需要加载 MNN 的 头文件, 我会把原来 'MNN-master/include/MNN' 复制到 'demo_mnn/mnn/include/MNN' 中,不过由于原始文件的路径是在 MNN 下, 直接加载会有些问题, 懒得修改加载路径了图省事, 所以我专门复制了一份资料放入的 'demo_mnn/mnn/include'
 - 修改 CMakeLists.txt 中  OpenCV 的地址, 由于我是用 brew 安装的,  "/opt/homebrew/Cellar/opencv/4.5.5/include/opencv4"
 - 修改 #define __SAVE_RESULT__, 为此我就直接注释掉了. 因为并不需要额外存储,以及他其实会报错...
+
+
+--------------------------------
+# 对 V1.2 版本后的说明:
+## 编译 MNN
+定义 NDK 的地址.
+```
+export ANDROID_NDK="/Users/wangruichao/Library/Android/sdk/ndk/24.0.8215888"
+source ~/.bash_profile
+source ~/.bashrc
+```
+进行编译
+```
+mkdir build &&  cd build
+cmake ../../.. \
+-DCMAKE_TOOLCHAIN_FILE=$ANDROID_NDK/build/cmake/android.toolchain.cmake \
+-DCMAKE_BUILD_TYPE=Release \
+-DANDROID_ABI="arm64-v8a" \
+-DMNN_OPENMP=ON \
+-DANDROID_STL=c++_static \
+-DMNN_USE_LOGCAT=false \
+-DMNN_BUILD_BENCHMARK=ON \
+-DMNN_USE_SSE=OFF \
+-DMNN_SUPPORT_BF16=OFF \
+-DMNN_BUILD_TEST=ON \
+-DANDROID_NATIVE_API_LEVEL=android-21  \
+-DMNN_BUILD_FOR_ANDROID_COMMAND=true \
+-DNATIVE_LIBRARY_OUTPUT=. -DNATIVE_INCLUDE_OUTPUT=. $1 $2 $3
+make -j8
+```
+
+## 添加对 openMP 的支持
+```
+FIND_PACKAGE( OpenMP REQUIRED)
+if(OPENMP_FOUND)
+message("OPENMP FOUND")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
+set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${OpenMP_EXE_LINKER_FLAGS}")
+endif()
+```
+
+
 
 -------------------------------------------------
 # 原始版本说明

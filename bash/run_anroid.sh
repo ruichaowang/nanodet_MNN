@@ -2,12 +2,18 @@
 # mkdir /data/chao
 # mkdir /data/chao/model
 
-adb push ./data/test_img.jpg /data/chao
-adb push ./build_android/linux_ncnn_nanodet /data/chao
+#推程序
+adb push ./build_android/nanodet-mnn /data/chao
 adb push ./model /data/chao
+adb push ./imgs /data/chao
+adb push ./3rdparty/mnn_android/lib/libMNN.so /data/chao
+# 额外的,推 openMP
+# 解决思路也很粗暴，直接将NDK里libomp.so拷贝到'src/main/jniLibs'或者'libs'，即可解决问题。
+adb push ./3rdparty/libomp.so /data/chao
 
-adb shell "chmod +x /data/chao/linux_ncnn_nanodet"
+#运行
+adb shell "chmod +x /data/chao/nanodet-mnn"
 adb shell "cd /data/chao \
          && export LD_LIBRARY_PATH=.:$LD_LIBRARY_PATH \
-         && ./linux_ncnn_nanodet ./model ./test_img.jpg ./test_img.png "
-adb pull "/data/chao/test_img.png" ~/Desktop
+         && ./nanodet-mnn "1" "./imgs/*.jpg""
+adb pull "/data/chao/imgs" ~/Desktop

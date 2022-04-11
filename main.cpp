@@ -4,7 +4,7 @@
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 
-//#define __SAVE_RESULT__  0 // if defined save drawed results to ../results, else show it in windows
+#define __SAVE_RESULT__  0 // if defined save drawed results to ../results, else show it in windows
 
 struct object_rect {
     int x;
@@ -255,8 +255,8 @@ int image_demo(NanoDet &detector, const char* imagepath)
         detector.detect(resized_img, results);
 
         #ifdef __SAVE_RESULT__
-            std::string save_path = img_name.operator std::string();
-            draw_bboxes(image, results, effect_roi, save_path.replace(3, 4, "results"));
+            std::string save_path = img_name ;    // 修改一下 std::string()
+            draw_bboxes(image, results, effect_roi, save_path.replace(img_name.find(".jpg"), 4, "_results.png"));
         #else
             draw_bboxes(image, results, effect_roi);
             cv::waitKey(0);
@@ -266,6 +266,7 @@ int image_demo(NanoDet &detector, const char* imagepath)
     return 0;
 }
 
+/*
 int webcam_demo(NanoDet& detector, int cam_id)
 {
     cv::Mat image;
@@ -307,6 +308,8 @@ int video_demo(NanoDet& detector, const char* path)
     }
     return 0;
 }
+
+*/
 
 int benchmark(NanoDet& detector)
 {
@@ -354,21 +357,21 @@ int main(int argc, char** argv)
     int mode = atoi(argv[1]);
     switch (mode)
     {
-    case 0:{
-        int cam_id = atoi(argv[2]);
-        webcam_demo(detector, cam_id);
-        break;
-        }
+    // case 0:{
+    //     int cam_id = atoi(argv[2]);
+    //     webcam_demo(detector, cam_id);
+    //     break;
+    //     }
     case 1:{
         const char* images = argv[2];
         image_demo(detector, images);
         break;
         }
-    case 2:{
-        const char* path = argv[2];
-        video_demo(detector, path);
-        break;
-        }
+    // case 2:{
+    //     const char* path = argv[2];
+    //     video_demo(detector, path);
+    //     break;
+    //     }
     case 3:{
         benchmark(detector);
         break;

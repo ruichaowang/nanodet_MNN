@@ -10,7 +10,5 @@ cd ..
 export ANDROID_NDK="/Users/wangruichao/Library/Android/sdk/ndk/24.0.8215888"
 cmake -S . -B build_android -DCMAKE_TOOLCHAIN_FILE=$ANDROID_NDK/build/cmake/android.toolchain.cmake \
       -DANDROID_ABI="arm64-v8a" \
-        -DANDROID_PLATFORM=android-24 \
-        #   -DNCNN_OPENMP=ON \
-          -DNCNN_VULKAN=ON 
-cmake --build build_android -j16 
+      -DANDROID_PLATFORM=android-24
+cmake --build build_android -j16
